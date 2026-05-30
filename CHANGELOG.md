@@ -3,7 +3,11 @@
 ## Unreleased
 
 ### Added
-- PR-Workflow erweitert: Schema-Validierung (`scripts/validate_manifests.py`) im PR-Gate.
+- Web-UI-Server ergänzt (`hermes-live-web-ui-server`) für direktes Laden von Projekt-Web-UIs,
+  Live-Interaktionen, Run-Dispatching und Kanban-Board mit Subagent-Handoff-Markierung.
+- `src/hermes_live_ui_controller/web_server.py` mit persistenter Projekt-/Run-/Kanban-Fassung.
+- `runtime.py` mit getrennter Adapter-Builder-Logik zur Wiederverwendung von CLI + Web-Server.
+
 - Coverage-Gate (`pytest --cov ... --cov-fail-under=80`) für Pull-Requests.
 - Node-24-Forwarding für GitHub Actions via `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true`.
 - Zusätzliche CLI-Unit-Tests (`tests/test_cli.py`) für Adapter/Run-Flow.

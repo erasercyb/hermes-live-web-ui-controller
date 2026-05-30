@@ -17,6 +17,7 @@ Dieses Repository implementiert den Plan **„Hermes Live‑Web‑UI Editing (ni
 - `verifier.py` – deterministische Verifier-Regeln (Ref-Checks, Text-Checks, Konsolenfehler, Toleranz)
 - `controller.py` – Kernloop: für jeden Schritt `action` -> `snapshot` -> `console` -> `verify`
 - `cli.py` – ausführbare CLI zum Starten eines Task-Manifests
+- `web_server.py` – optionale Web-Oberfläche (FastAPI): Projektseiten öffnen, Live-Sessions starten, Runs triggern, Kanban-Tickets pflegen.
 - `schemas/run_task_schema.json` – JSON-Schema für Task-Inputs
 
 ## Unterstützte Aktionen
@@ -62,6 +63,30 @@ Für echte Browser-Runs (Playwright):
 python -m pip install -e ".[browser]"
 python -m playwright install
 ```
+
+Für Web-UI (Dashboard + Kanban + Live-Interaktion):
+
+```bash
+python -m pip install -e ".[web]"
+```
+
+## Web UI starten
+
+Das Dashboard läuft standardmäßig auf `http://127.0.0.1:8765`:
+
+```bash
+hermes-live-web-ui-server --host 127.0.0.1 --port 8765
+```
+
+Typische Endpunkte:
+
+- `GET /` – Dashboard-UI
+- `GET /api/projects` – registrierte Projekt-Web‑UIs
+- `POST /api/projects` – neues Projekt registrieren
+- `POST /api/sessions` – Projekt-URL im Live-Modus öffnen
+- `POST /api/sessions/{id}/action` – Live-Aktion ausführen (`click`, `type`, `scroll`, ...)
+- `POST /api/runs` – Manifest asynchron ausführen
+- `GET /api/kanban` – Aufgabenliste, neue Karten in `complex` landen automatisch in `waiting_subagents`
 
 ## Schnellstart
 

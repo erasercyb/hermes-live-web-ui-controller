@@ -80,14 +80,24 @@ def test_cli_run_from_manifest_failure(monkeypatch, capsys) -> None:
     assert "- Step A: blocked" in captured
 
 
-def test_build_playwright_adapter_raises_when_dependency_missing(monkeypatch) -> None:
+def test_build_adapter_raises_for_missing_dependency(monkeypatch) -> None:
     task = RunTask.from_path("examples/task_edit_hero.json")
 
     def raise_dependency_error(*_args, **_kwargs):
-        raise cli.PlaywrightDependencyError("missing playwright")
+        raise RuntimeError("missing playwright")
 
-    monkeypatch.setattr(cli, "PlaywrightBrowserAdapter", raise_dependency_error)
+    monkeypatch.setattr(cli, "build_adapter", raise_dependency_error)
 
-    with pytest.raises(SystemExit) as excinfo:
-        cli._build_playwright_adapter(task, headless=True, slow_mo_ms=0)
-    assert "missing playwright" in str(excinfo.value)
+    args = Namespace(
+        manifest="examples/task_edit_hero.json",
+        adapter="playwright",
+        mock_pages=None,
+        output_dir=None,
+        auto_confirm=False,
+        no_headless=False,
+        slow_mo_ms=0,
+    )
+
+    with pytest.raises(RuntimeError):
+        cli.run_from_manifest(args)
+    del task

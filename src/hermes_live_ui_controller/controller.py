@@ -341,6 +341,9 @@ class NotImplementedAdapter:
     def back(self) -> None:
         raise RuntimeError("No browser backend configured")
 
+    def rollback(self) -> bool:
+        return False
+
     def console(self, clear: bool = False, expression: str | None = None) -> Sequence[str]:  # noqa: ARG002
         raise RuntimeError("No browser backend configured")
 

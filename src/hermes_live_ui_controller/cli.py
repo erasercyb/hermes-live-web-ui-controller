@@ -3,42 +3,20 @@
 from __future__ import annotations
 
 import argparse
-import json
-from pathlib import Path
 
-from .adapter import InMemoryBrowserAdapter
-from .controller import LiveWebUIRunner, NotImplementedAdapter
+from .controller import LiveWebUIRunner
 from .models import RunTask
-from .playwright_adapter import PlaywrightBrowserAdapter, PlaywrightDependencyError
-
-
-def _build_mock_adapter(path: str | None) -> InMemoryBrowserAdapter:
-    if not path:
-        raise SystemExit("--mock-pages is required when using in-memory mock mode")
-
-    pages_path = Path(path)
-    payload = json.loads(pages_path.read_text(encoding="utf-8"))
-    return InMemoryBrowserAdapter(pages=payload, start_url=payload["start_url"])
-
-
-def _build_playwright_adapter(task: RunTask, headless: bool, slow_mo_ms: int) -> PlaywrightBrowserAdapter:
-    try:
-        return PlaywrightBrowserAdapter(start_url=task.url, headless=headless, slow_mo_ms=slow_mo_ms)
-    except PlaywrightDependencyError as exc:
-        raise SystemExit(str(exc)) from exc
+from .runtime import AdapterConfig, build_adapter
 
 
 def _build_adapter(args: argparse.Namespace, task: RunTask):
-    if args.adapter == "mock":
-        return _build_mock_adapter(args.mock_pages)
-
-    if args.adapter == "playwright":
-        return _build_playwright_adapter(task, headless=not args.no_headless, slow_mo_ms=args.slow_mo_ms)
-
-    if args.adapter == "none":
-        return NotImplementedAdapter()
-
-    raise SystemExit(f"unknown adapter '{args.adapter}'")
+    config = AdapterConfig(
+        mode=args.adapter,
+        mock_pages=args.mock_pages,
+        no_headless=args.no_headless,
+        slow_mo_ms=args.slow_mo_ms,
+    )
+    return build_adapter(task, config)
 
 
 def run_from_manifest(args: argparse.Namespace) -> int:

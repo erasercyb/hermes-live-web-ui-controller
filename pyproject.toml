@@ -22,13 +22,20 @@ dev = [
   "ruff>=0.8",
   "pytest-cov>=5.0",
   "jsonschema>=4.24",
+  "fastapi>=0.115",
+  "uvicorn>=0.30",
 ]
 browser = [
   "playwright>=1.47",
 ]
+web = [
+  "fastapi>=0.115",
+  "uvicorn>=0.30",
+]
 
 [project.scripts]
 hermes-live-web-ui = "hermes_live_ui_controller.cli:main"
+hermes-live-web-ui-server = "hermes_live_ui_controller.web_server:run_server"
 
 [project.urls]
 Homepage = "https://github.com/erasercyb/hermes-live-web-ui-controller"
@@ -67,4 +74,5 @@ source = ["hermes_live_ui_controller"]
 omit = [
   "src/hermes_live_ui_controller/playwright_adapter.py",
   "src/hermes_live_ui_controller/__main__.py",
+  "src/hermes_live_ui_controller/web_server.py",
 ]
