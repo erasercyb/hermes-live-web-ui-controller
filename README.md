@@ -140,15 +140,22 @@ ruff format --check src tests
 
 ## CI
 
-GitHub Actions (`.github/workflows/ci.yml`) prüft:
+GitHub Actions:
+
+- `CI` auf `main` (`.github/workflows/ci.yml`)
+- `PR Checks` auf Pull Requests (`.github/workflows/pr-checks.yml`)
+- Optionale Release-Pipeline (`.github/workflows/release.yml`) auf `v*`-Tags
+
+Gefordert:
 
 - `ruff check`
 - `ruff format --check`
 - `pytest`
+- `python -m build`
 
 ## Nächste Entwicklungsstufen
 
-- Playwright-Adapter als echte Ausführungsebene
+- PR-Review-Workflow in Richtung echte Codex-Review-Verifikation erweitern (z. B. Regel-Checks auf Policy-Verstöße).
 - Dashboard-Metriken (Erfolgsquote, Schritte bis Ziel, Retry-Rate)
 - Persistente Run-Datenbank + Verlauf
 - Team-/Vorlagenverzeichnis für häufige Web-UI-Patterns

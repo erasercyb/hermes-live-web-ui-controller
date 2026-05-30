@@ -1,0 +1,37 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build backend
+        run: |
+          python -m pip install -U pip
+          python -m pip install -e ".[dev]"
+          python -m pip install build
+
+      - name: Build wheel and sdist
+        run: |
+          python -m build
+
+      - name: Create release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
