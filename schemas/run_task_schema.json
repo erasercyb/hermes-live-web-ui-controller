@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hermes-live-web-ui-controller/schemas/run_task_schema.json",
+  "title": "Hermes Live Web UI Task",
+  "type": "object",
+  "required": ["task_id", "goal", "url", "steps"],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "policy": {
+      "type": "object",
+      "properties": {
+        "allowed_domains": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "blocked_actions": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "require_confirm_actions": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "max_turns": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 35
+        },
+        "snapshot_stability_threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "exclusiveMinimum": false,
+          "default": 0.85
+        }
+      },
+      "required": []
+    },
+    "checks": {
+      "type": "object",
+      "properties": {
+        "must_have_ref": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "must_contain_text": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "console_no_fatal": {"type": "boolean", "default": true},
+        "max_console_errors": {"type": "integer", "minimum": 0, "default": 0}
+      }
+    },
+    "expected_delta": {
+      "type": "object",
+      "properties": {
+        "target_selector_text": {"type": "string", "minLength": 1},
+        "snapshot_keyword_after": {"type": "string", "minLength": 1}
+      }
+    },
+    "fallback": {
+      "type": "object",
+      "properties": {
+        "max_failures": {"type": "integer", "minimum": 0, "default": 2},
+        "rollback": {"type": "boolean", "default": false}
+      }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "action"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "action": {"$ref": "#/definitions/stepAction"},
+          "alternative_action": {"$ref": "#/definitions/stepAction"},
+          "post_checks": {"$ref": "#/properties/checks"},
+          "pre_checks": {"$ref": "#/properties/checks"},
+          "require_confirmation": {"type": "boolean"},
+          "max_retries": {"type": "integer", "minimum": 0}
+        }
+      }
+    }
+  },
+  "definitions": {
+    "stepAction": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["navigate", "click", "type", "scroll", "press", "back", "snapshot"]
+        },
+        "url": {"type": "string", "format": "uri"},
+        "ref": {"type": "string", "minLength": 1},
+        "text": {"type": "string"},
+        "direction": {"type": "string", "enum": ["up", "down"]},
+        "amount": {"type": "integer", "minimum": 0, "default": 1},
+        "key": {"type": "string", "minLength": 1},
+        "require_confirmation": {"type": "boolean"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"type": {"const": "navigate"}}},
+          "then": {"required": ["url"]}
+        },
+        {
+          "if": {"properties": {"type": {"const": "click"}}},
+          "then": {"required": ["ref"]}
+        },
+        {
+          "if": {"properties": {"type": {"const": "type"}}},
+          "then": {"required": ["ref", "text"]}
+        },
+        {
+          "if": {"properties": {"type": {"const": "press"}}},
+          "then": {"required": ["key"]}
+        },
+        {
+          "if": {"properties": {"type": {"const": "scroll"}}},
+          "then": {"required": ["direction"]}
+        }
+      ]
+    }
+  }
+}

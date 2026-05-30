@@ -1,0 +1,42 @@
+{
+  "start_url": "https://hermes-staging.local/dashboard",
+  "https://hermes-staging.local/dashboard": {
+    "title": "Hermes Dashboard",
+    "text": "Dashboard\nHero Bereich\nCTA aktiv\n",
+    "refs": ["e11", "e12", "e13", "e99", "e20"],
+    "transitions": {
+      "e11": "https://hermes-staging.local/dashboard/hero-edit"
+    }
+  },
+  "https://hermes-staging.local/dashboard/hero-edit": {
+    "title": "Hero bearbeiten",
+    "text": "Hero bearbeiten\nHero gespeichert\n",
+    "refs": ["e12", "e13", "e99", "back"],
+    "editable_refs": {
+      "e12": true,
+      "e13": true
+    },
+    "transitions": {
+      "e99": {
+        "text": "Hero gespeichert\nCTA aktiv\nDanke für die Änderung"
+      }
+    }
+  },
+  "https://hermes-staging.local/marketing/forms/lead": {
+    "title": "Formular",
+    "text": "Newsletter\nAnmelden\nE-Mail\nDatenschutz",
+    "refs": ["f1", "f2", "f3", "f4", "back"],
+    "editable_refs": {
+      "f1": true,
+      "f2": true
+    },
+    "transitions": {
+      "f4": {
+        "text": "Danke für dein Interesse\nDatenschutz"
+      },
+      "f3": {
+        "text": "Newsletter\nAnmelden\nE-Mail\nDatenschutz akzeptiert"
+      }
+    }
+  }
+}

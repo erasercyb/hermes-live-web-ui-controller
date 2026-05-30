@@ -1,0 +1,52 @@
+{
+  "task_id": "submit-newsletter-form-2026-05-24",
+  "goal": "Öffne das Formular und sende eine Test-Eintragung ab",
+  "url": "https://hermes-staging.local/marketing/forms/lead",
+  "policy": {
+    "allowed_domains": ["hermes-staging.local"],
+    "blocked_actions": ["delete_user", "payment", "export_raw_db"],
+    "require_confirm_actions": ["submit", "publish", "delete"],
+    "max_turns": 50,
+    "snapshot_stability_threshold": 0.78
+  },
+  "checks": {
+    "must_have_ref": [],
+    "must_contain_text": [],
+    "console_no_fatal": true,
+    "max_console_errors": 0
+  },
+  "expected_delta": {},
+  "fallback": {
+    "max_failures": 1,
+    "rollback": true
+  },
+  "steps": [
+    {
+      "name": "Formularseite öffnen",
+      "action": {"type": "navigate", "url": "https://hermes-staging.local/marketing/forms/lead"},
+      "post_checks": {
+        "must_contain_text": ["Anmelden", "E-Mail"]
+      }
+    },
+    {
+      "name": "Name eintragen",
+      "action": {"type": "type", "ref": "f1", "text": "Test User"}
+    },
+    {
+      "name": "E-Mail eintragen",
+      "action": {"type": "type", "ref": "f2", "text": "test@example.com"}
+    },
+    {
+      "name": "Datenschutz bestätigen",
+      "action": {"type": "click", "ref": "f3"}
+    },
+    {
+      "name": "Formular absenden",
+      "action": {"type": "click", "ref": "f4", "require_confirmation": true},
+      "alternative_action": {"type": "press", "key": "Enter"},
+      "post_checks": {
+        "must_contain_text": ["Danke für dein Interesse"]
+      }
+    }
+  ]
+}

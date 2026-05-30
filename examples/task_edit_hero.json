@@ -1,0 +1,54 @@
+{
+  "task_id": "edit-hero-section-2026-05-24",
+  "goal": "Passe die Hero-Überschrift und den CTA auf der Login-Übersicht an",
+  "url": "https://hermes-staging.local/dashboard",
+  "policy": {
+    "allowed_domains": ["hermes-staging.local"],
+    "blocked_actions": ["delete_user", "payment", "export_raw_db"],
+    "require_confirm_actions": ["publish", "delete", "submit"],
+    "max_turns": 35,
+    "snapshot_stability_threshold": 0.82
+  },
+  "checks": {
+    "must_have_ref": [],
+    "must_contain_text": [],
+    "console_no_fatal": true,
+    "max_console_errors": 0
+  },
+  "expected_delta": {},
+  "fallback": {
+    "max_failures": 2,
+    "rollback": true
+  },
+  "steps": [
+    {
+      "name": "Dashboard öffnen",
+      "action": {"type": "navigate", "url": "https://hermes-staging.local/dashboard"},
+      "post_checks": {
+        "must_contain_text": ["Dashboard", "Hero"]
+      }
+    },
+    {
+      "name": "Hero-Headline öffnen",
+      "action": {"type": "click", "ref": "e11"},
+      "alternative_action": {"type": "click", "ref": "e12"},
+      "max_retries": 1,
+      "post_checks": {"must_have_ref": ["e12"]}
+    },
+    {
+      "name": "Hero-Text setzen",
+      "action": {"type": "type", "ref": "e12", "text": "Willkommen zurück"}
+    },
+    {
+      "name": "CTA-Typ ändern",
+      "action": {"type": "type", "ref": "e13", "text": "Jetzt starten"}
+    },
+    {
+      "name": "Änderungen speichern",
+      "action": {"type": "click", "ref": "e99", "require_confirmation": true},
+      "post_checks": {
+        "must_contain_text": ["Hero gespeichert"]
+      }
+    }
+  ]
+}
