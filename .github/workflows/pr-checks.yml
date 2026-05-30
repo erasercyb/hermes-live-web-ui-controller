@@ -8,6 +8,9 @@ permissions:
   contents: read
   pull-requests: write
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   checks:
     runs-on: ubuntu-latest
@@ -37,9 +40,13 @@ jobs:
         run: |
           ruff check src tests
 
+      - name: Validate manifests
+        run: |
+          python scripts/validate_manifests.py
+
       - name: Tests
         run: |
-          pytest
+          pytest --cov=hermes_live_ui_controller --cov-report=term-missing --cov-fail-under=80
 
       - name: Build package
         run: |

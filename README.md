@@ -131,11 +131,14 @@ python -m hermes_live_ui_controller \
 
 - `ruff` für Lint & Format (CI)
 - `pytest` mit gezielten Unit-Tests für Model-Validierung, Controller-Verhalten und Verifier
+- `pytest --cov` (Coverage-Gate im PR-Flow)
+- `python scripts/validate_manifests.py` (JSON-Schema-Check)
 
 ```bash
 python -m pytest
 ruff check src tests
 ruff format --check src tests
+python scripts/validate_manifests.py
 ```
 
 ## CI
@@ -150,8 +153,9 @@ Gefordert:
 
 - `ruff check`
 - `ruff format --check`
-- `pytest`
+- `pytest --cov=hermes_live_ui_controller --cov-fail-under=80`
 - `python -m build`
+- `python scripts/validate_manifests.py`
 
 ## Nächste Entwicklungsstufen
 
