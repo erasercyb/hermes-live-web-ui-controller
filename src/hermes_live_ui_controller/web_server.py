@@ -457,6 +457,26 @@ def build_app(data_dir: str | None = None) -> FastAPI:
         store.save_kanban(tasks)
         return task
 
+    @app.post("/api/kanban/{task_id}/handoff")
+    def handoff_kanban_task(task_id: str) -> dict[str, Any]:
+        tasks = store.kanban()
+        for task in tasks:
+            if task["id"] == task_id:
+                task["status"] = "waiting_subagents"
+                task["updated_at"] = _now()
+                payload = {
+                    "scope": "hermes_live_ui_controller",
+                    "goal": task.get("title"),
+                    "description": task.get("description"),
+                    "complexity": task.get("complexity", "complex"),
+                }
+                task["handoff_payload"] = payload
+                task["notes"] = "Subagent-Trigger erstellt: handoff angefordert."
+                store.save_kanban(tasks)
+                return task
+
+        raise HTTPException(status_code=404, detail="Kanban-Aufgabe nicht gefunden")
+
     @app.patch("/api/kanban/{task_id}")
     def patch_kanban(task_id: str, payload: KanbanUpdateRequest) -> dict[str, Any]:
         tasks = store.kanban()

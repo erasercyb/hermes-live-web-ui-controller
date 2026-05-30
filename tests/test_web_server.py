@@ -50,7 +50,6 @@ class _FakeAdapter:
         return ["ok"] if clear else []
 
 
-
 def _build_task() -> dict:
     return RunTask(
         task_id="ui-task",
@@ -84,7 +83,7 @@ def test_live_session_and_action_flow(monkeypatch) -> None:
 
 
 @pytest.mark.parametrize("complexity,expected_status", [("complex", "waiting_subagents"), ("simple", "todo")])
-def test_kanban_status_from_complexity(monkeypatch, complexity: str, expected_status: str) -> None:
+def test_kanban_status_from_complexity(complexity: str, expected_status: str) -> None:
     client = TestClient(build_app("/tmp/live-ui-data-kanban"))
     response = client.post(
         "/api/kanban",
@@ -97,6 +96,26 @@ def test_kanban_status_from_complexity(monkeypatch, complexity: str, expected_st
     assert response.status_code == 200
     payload = response.json()
     assert payload["status"] == expected_status
+
+
+def test_kanban_handoff() -> None:
+    client = TestClient(build_app("/tmp/live-ui-data-kanban-handoff"))
+    response = client.post(
+        "/api/kanban",
+        json={
+            "title": "Neue Funktion",
+            "description": "komplizierte Aufgabe",
+            "complexity": "simple",
+        },
+    )
+    task = response.json()
+
+    handoff = client.post(f"/api/kanban/{task['id']}/handoff")
+    assert handoff.status_code == 200
+
+    updated = handoff.json()
+    assert updated["status"] == "waiting_subagents"
+    assert "handoff_payload" in updated
 
 
 def test_run_api_async_success(monkeypatch) -> None:
