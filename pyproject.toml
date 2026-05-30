@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "hermes-live-web-ui-controller"
 description = "Executable Operator-Loop for live, verified web-UI interactions."
 readme = "README.md"
-license = { text = "MIT" }
+license = "MIT"
 requires-python = ">=3.11"
 version = "0.1.0"
 keywords = ["hermes", "web-ui", "browser", "automation", "verification"]
