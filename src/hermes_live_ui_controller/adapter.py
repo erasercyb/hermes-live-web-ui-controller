@@ -127,6 +127,11 @@ class InMemoryBrowserAdapter:
         self.current_url = self.history.pop()
         self._apply_page(self.current_url)
 
+    def rollback(self) -> bool:
+        self.history = list(self.history)
+        self.console_events.append("rollback")
+        return False
+
     def console(self, clear: bool = False, expression: str | None = None) -> list[str]:
         del expression
         events = list(self.console_events)

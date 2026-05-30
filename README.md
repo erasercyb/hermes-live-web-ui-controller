@@ -56,11 +56,20 @@ Entwicklungsabhängigkeiten:
 python -m pip install -e " .[dev]"
 ```
 
+Für echte Browser-Runs (Playwright):
+
+```bash
+python -m pip install -e ".[browser]"
+python -m playwright install
+```
+
 ## Schnellstart
 
 ```bash
-python -m hermes_live_ui_controller run \
+python -m hermes_live_ui_controller \
   --manifest examples/task_edit_hero.json \
+  --adapter mock \
+  --mock-pages examples/pages_mock.json \
   --output-dir ./.runs
 ```
 

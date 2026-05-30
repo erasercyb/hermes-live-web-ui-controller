@@ -21,6 +21,9 @@ dev = [
   "pytest>=8.2",
   "ruff>=0.8",
 ]
+browser = [
+  "playwright>=1.47",
+]
 
 [project.scripts]
 hermes-live-web-ui = "hermes_live_ui_controller.cli:main"
