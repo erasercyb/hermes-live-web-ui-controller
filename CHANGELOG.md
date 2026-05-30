@@ -6,6 +6,7 @@
 - Web-UI-Server ergänzt (`hermes-live-web-ui-server`) für direktes Laden von Projekt-Web-UIs,
   Live-Interaktionen, Run-Dispatching und Kanban-Board mit Subagent-Handoff-Markierung.
 - `src/hermes_live_ui_controller/web_server.py` mit persistenter Projekt-/Run-/Kanban-Fassung.
+- Kanban-Subagent-Handoff-Route hinzugefügt (`POST /api/kanban/{id}/handoff`) zur Markierung komplexer Aufgaben.
 - `runtime.py` mit getrennter Adapter-Builder-Logik zur Wiederverwendung von CLI + Web-Server.
 
 - Coverage-Gate (`pytest --cov ... --cov-fail-under=80`) für Pull-Requests.
