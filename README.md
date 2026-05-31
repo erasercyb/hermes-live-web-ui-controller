@@ -54,7 +54,7 @@ python -m pip install -e .
 Entwicklungsabhängigkeiten:
 
 ```bash
-python -m pip install -e " .[dev]"
+python -m pip install -e ".[dev]"
 ```
 
 Für echte Browser-Runs (Playwright):
@@ -83,12 +83,30 @@ Typische Endpunkte:
 - `GET /` – Dashboard-UI
 - `GET /api/projects` – registrierte Projekt-Web‑UIs
 - `POST /api/projects` – neues Projekt registrieren
+- `POST /api/projects/import-registry` – Projekt-URLs aus Registry-Export importieren (`/root/project-registry/exports/projects.json`)
 - `POST /api/sessions` – Projekt-URL im Live-Modus öffnen
+- `POST /api/sessions/from-project/{id}` – gespeicherte Projekt-ID direkt öffnen
+- `POST /api/sessions/from-registry` – Projekt per Slug aus Registry laden (`slug`, optional `status_filter`)
 - `POST /api/sessions/{id}/action` – Live-Aktion ausführen (`click`, `type`, `scroll`, ...)
+- `POST /api/sessions/{id}/verify` – Aktuelle Seite anhand von Snapshot-/Console-Kriterien prüfen
+- `GET /api/sessions/{id}/history` – letzte Session-Aktionen (Action-Loop) anzeigen
 - `POST /api/runs` – Manifest asynchron ausführen
 - `GET /api/kanban` – Aufgabenliste, neue Karten in `complex` landen automatisch in `waiting_subagents`
+- `POST /api/kanban/{id}/handoff` – Karte in Subagent-Warteschlange verschieben (`status=waiting_subagents`)
+- `GET /api/kanban/handoffs` – exportierte Subagent-Aufgaben inkl. Payload
+- `POST /api/kanban` – neue Karte anlegen
+- `GET /api/stats` – Backend-Status: Projekte, Sessions, Kanban, Handoffs und Laufzeiten für die Dashboard-Anzeige
 
-## Schnellstart
+### Kanban-Handoff-Integration
+
+Das Dashboard kann bei komplexen Karten automatisch einen Hermes-Kanban-Eintrag anlegen. Dazu setze:
+
+- `LIVE_UI_KANBAN_CMD=1` – Aktiviert den externen Aufruf
+- `LIVE_UI_KANBAN_ASSIGNEE=<person|team>` – optional, wird als `--assignee` übergeben
+
+Falls `hermes` nicht verfügbar ist oder der Aufruf fehlschlägt, bleibt der lokale Handoff dennoch lokal persistiert unter `/api/kanban/handoffs`.
+
+## Schnellstart-Flow
 
 ```bash
 python -m hermes_live_ui_controller \
